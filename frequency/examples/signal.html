@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>Signals</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="icon" type="image/png" sizes="174x174" href="./style/favicon.png">
+
+	<script type="text/javascript" src="../build/Tone.js"></script>
+	<script type="text/javascript" src="./scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="./scripts/draggabilly.js"></script>
+	<script type="text/javascript" src="https://tonejs.github.io/Logo/build/Logo.js"></script>
+	<script type="text/javascript" src="./scripts/StartAudioContext.js"></script>
+	<script type="text/javascript" src="./scripts/Interface.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="./style/examples.css">
+
+	<script type="text/javascript">
+		// jshint ignore: start
+	</script>
+	
+	<canvas id="myCanvas" width="1300" height="900" style="position: absolute; left: 0; top: 0; outline:1px solid #d3d3d3;">
+	Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+ctx.beginPath();
+ctx.arc(500, 250, 50, 0, 2 * Math.PI);
+ctx.stroke();
+
+</script>
+
+</head>
+<body>
+    
+	<script type="text/javascript">
+		//initially muted
+		Tone.Master.mute = true;
+
+		//use this to pan the two oscillators hard left/right
+		var merge = new Tone.Merge().toMaster();
+		
+		var osc = new Tone.Oscillator({
+			"frequency" : 440,
+			"volume" : -10
+		}).toMaster();
+
+		//two oscillators panned hard left / hard right
+		var rightOsc = new Tone.Oscillator({
+			"type" : "sine",
+			"volume" : -20
+		}).connect(merge.right).start();
+
+		var leftOsc = new Tone.Oscillator({
+			"type" : "sine",
+			"volume" : -20
+		}).connect(merge.left).start();
+
+		//create an oscillation that goes from 0 to 1200
+		//connection it to the detune of the two oscillators
+		var detuneLFO = new Tone.LFO({
+			"type" : "square",
+			"min" : 0,
+			"max" : 1200
+		}).fan(rightOsc.detune, leftOsc.detune).start();
+
+		//the frequency signal
+		var frequency = new Tone.Signal(10);
+
+		//the move the 0 to 1 value into frequency range
+		var scale = new Tone.ScaleExp(110, 440);
+		//var scale = new Tone.ScaleExp(50, 200);
+		
+		//multiply the frequency by 2.5 to get a 10th above
+		var mult = new Tone.Multiply(2);
+		
+		//chain the components together
+		frequency.chain(scale, mult);
+		scale.connect(rightOsc.frequency);
+		mult.connect(leftOsc.frequency);
+
+		//multiply the frequency by 2 to get the octave above
+		var detuneScale = new Tone.Scale(4, 14);
+		frequency.chain(detuneScale, detuneLFO.frequency);		
+
+	</script>
+
+	<script id="GUI" type="text/javascript">
+
+		$(function(){
+			
+			new Interface.Dragger({
+			tone : osc,
+				x : {
+					param : "frequency",
+					min : 60,
+					max : 2000,
+					exp : 2
+				},
+				y : {
+				//alert("I am in Y box!")
+					//param : "frequency",
+					//min : 60,
+					//max : 2000,
+					//exp : 2
+				},
+				//drag : function(value){
+					//frequency.rampTo(value, 0.1);
+				//},
+				start : function(){
+					//Tone.Master.mute = true;
+					//frequency.rampTo(0, 0.05);
+					//alert("I am in start!");
+					//osc.start();
+					//Tone.Master.volume.rampTo(0, 0.05);
+				},
+				end: function(){
+					//Tone.Master.mute = true;
+					//frequency.rampTo(-Infinity, 0.05);
+					//alert("I am in end!");
+					//Tone.Master.volume.rampTo(-Infinity, 0.05);
+				},
+				name : "frequency"
+				/*min : 0,
+				max : 1,
+				exp : 0.5,
+				value : 0.5,
+				position: 5*/
+			});
+		});	
+		
+		
+		
+		(function() {
+    var mousePos;
+
+    document.onmousemove = handleMouseMove;
+    setInterval(getMousePosition, 100); // setInterval repeats every X ms
+
+    function handleMouseMove(event) {
+        var dot, eventDoc, doc, body, pageX, pageY;
+
+        event = event || window.event; // IE-ism
+
+        // If pageX/Y aren't available and clientX/Y are,
+        // calculate pageX/Y - logic taken from jQuery.
+        // (This is to support old IE)
+        if (event.pageX == null && event.clientX != null) {
+            eventDoc = (event.target && event.target.ownerDocument) || document;
+            doc = eventDoc.documentElement;
+            body = eventDoc.body;
+
+            event.pageX = event.clientX +
+              (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+              (doc && doc.clientLeft || body && body.clientLeft || 0);
+            event.pageY = event.clientY +
+              (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+              (doc && doc.clientTop  || body && body.clientTop  || 0 );
+        }
+		mousePos = {
+            x: event.pageX,
+            y: event.pageY
+        };
+        
+        //alert(event.pageX);
+        //alert(event.pageY);
+        
+        var radius = 50;
+        var xDev = mousePos.x - 500;
+        var yDev = mousePos.y - 250;
+        
+        var dist = Math.pow(xDev, 2) + Math.pow(yDev, 2) - radius*radius;
+        // dist = Math.sqrt(Math.max(1,dist));
+        dist = Math.sqrt(Math.max(1,dist));
+        dist /= 500;
+        dist = Math.pow( dist, .5 );
+        // dist = Math.sqrt(Math.abs(dist));
+        // var thickness = 20;
+        // if( dist < thickness ) dist = 0;
+        
+        //alert(dist);
+        var freq = 0;
+        //if(dist <= 50)
+        //{
+        	freq = 1/dist; //(20 - 0.1*(dist-50));
+        	//osc.frequency = (2000 - 20*(dist-50));
+        //}
+        
+        Tone.Master.mute = false;
+        //osc.start();
+        //Tone.Master.volume.rampTo(0, 0.05);
+        frequency.rampTo(freq, 0);
+        //freq.setValueAtTime(freq, "+0");
+        
+        if(dist > 450./500)
+        {
+        	Tone.Master.mute = true;
+        	//osc.end();
+        }
+        	
+        //osc.start();
+        //Tone.Master.volume.rampTo(0, 0.05);
+    }
+   
+   
+    function getMousePosition() 
+    {
+        var pos = mousePos;
+        if (!pos) {
+            // We haven't seen any movement yet
+        }
+        else {
+        // Use pos.x and pos.y
+        }
+    }
+    
+    document.onclick = function() 
+    {
+    //alert("I am here")
+    	var pos = mousePos;
+    	if(pos)
+    	{
+    	alert(pos.x);
+    	//alert(pos.y);
+    	}
+	}
+    
+    })();
+    
+    
+    
+
+	</script>
+
+    
+
+</body>
+</html>
