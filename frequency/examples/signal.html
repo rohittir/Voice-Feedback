@@ -20,7 +20,7 @@
 		// jshint ignore: start
 	</script>
 	
-	<canvas id="myCanvas" width="1300" height="900" style="border:1px solid #d3d3d3;">
+	<canvas id="myCanvas" width="1300" height="900" style="position: absolute; left: 0; top: 0; outline:1px solid #d3d3d3;">
 	Your browser does not support the HTML5 canvas tag.</canvas>
 
 <script>
@@ -28,7 +28,7 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 ctx.beginPath();
-ctx.arc(500, 200, 50, 0, 2 * Math.PI);
+ctx.arc(500, 250, 50, 0, 2 * Math.PI);
 ctx.stroke();
 
 </script>
@@ -168,18 +168,24 @@ ctx.stroke();
         //alert(event.pageX);
         //alert(event.pageY);
         
-        var maxdist = 50;
+        var radius = 50;
         var xDev = mousePos.x - 500;
         var yDev = mousePos.y - 250;
         
-        var dist = Math.pow(xDev, 2) + Math.pow(yDev, 2);
-        dist = Math.sqrt(dist);
+        var dist = Math.pow(xDev, 2) + Math.pow(yDev, 2) - radius*radius;
+        // dist = Math.sqrt(Math.max(1,dist));
+        dist = Math.sqrt(Math.max(1,dist));
+        dist /= 500;
+        dist = Math.pow( dist, .5 );
+        // dist = Math.sqrt(Math.abs(dist));
+        // var thickness = 20;
+        // if( dist < thickness ) dist = 0;
         
         //alert(dist);
         var freq = 0;
         //if(dist <= 50)
         //{
-        	freq = 50/dist; //(20 - 0.1*(dist-50));
+        	freq = 1/dist; //(20 - 0.1*(dist-50));
         	//osc.frequency = (2000 - 20*(dist-50));
         //}
         
@@ -189,7 +195,7 @@ ctx.stroke();
         frequency.rampTo(freq, 0);
         //freq.setValueAtTime(freq, "+0");
         
-        if(dist > 450)
+        if(dist > 450./500)
         {
         	Tone.Master.mute = true;
         	//osc.end();
@@ -218,7 +224,7 @@ ctx.stroke();
     	if(pos)
     	{
     	alert(pos.x);
-    	alert(pos.y);
+    	//alert(pos.y);
     	}
 	}
     
