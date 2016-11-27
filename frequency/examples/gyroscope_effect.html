@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>Gyroscopic Test</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="icon" type="image/png" sizes="174x174" href="./style/favicon.png">
+
+	<script type="text/javascript" src="../build/Tone.js"></script>
+	<script type="text/javascript" src="./scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="./scripts/draggabilly.js"></script>
+	<script type="text/javascript" src="https://tonejs.github.io/Logo/build/Logo.js"></script>
+	<script type="text/javascript" src="./scripts/StartAudioContext.js"></script>
+	<script type="text/javascript" src="./scripts/Interface.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="./style/examples.css">
+
+	<script type="text/javascript">
+		// jshint ignore: start
+	</script>
+	
+	<canvas id="myCanvas" width="1300" height="900" style="position: absolute; left:0; top: 0; outline:1px solid #d3d3d3;">
+	Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+
+// var c = document.getElementById("myCanvas");
+// var ctx = c.getContext("2d");
+// ctx.beginPath();
+// ctx.arc(500, 200, 50, 0, 2 * Math.PI);
+// ctx.stroke();
+
+</script>
+
+<form>
+    <input type="text" id="imagename" value="" />
+</form>
+
+    
+</head>
+<body>
+    
+	<script type="text/javascript">
+
+		if(window.DeviceMotionEvent)
+		{
+			window.addEventListener("devicemotion", motion, false);
+		}
+		else
+		{
+			console.log("DeviceMotionEvent is not supported");
+		}
+
+		if(window.DeviceOrientationEvent)
+		{
+			window.addEventListener("deviceorientation", orientation, false);
+		}
+		else
+		{
+			console.log("DeviceOrientationEvent is not supported");
+		}
+
+		function motion(event)
+		{
+			console.log("Accelerometer: "
+				+ event.accelerationIncludingGravity.x + ", "
+				+ event.accelerationIncludingGravity.y + ", "
+				+ event.accelerationIncludingGravity.z
+				);
+
+			alert("motion");
+		}
+
+		function orientation(event)
+		{
+			console.log("Magnetometer: "
+				+ event.alpha + ", "
+				+ event.beta + ", "
+				+ event.gamma
+				);
+			alert("orientation");
+		}
+
+	</script>
+
+	<script id="GUI" type="text/javascript">
+    
+	</script>
+
+    
+
+</body>
+</html>
