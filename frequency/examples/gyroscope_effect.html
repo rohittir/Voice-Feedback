@@ -23,77 +23,119 @@
 	<canvas id="myCanvas" width="1300" height="900" style="position: absolute; left:0; top: 0; outline:1px solid #d3d3d3;">
 	Your browser does not support the HTML5 canvas tag.</canvas>
 
-<script>
+	<script>
+			// var c = document.getElementById("myCanvas");
+			// var ctx = c.getContext("2d");
+			// ctx.beginPath();
+			// ctx.arc(400, 250, 50, 0, 2 * Math.PI);
+			// ctx.closePath();
+			// ctx.stroke();
 
-// var c = document.getElementById("myCanvas");
-// var ctx = c.getContext("2d");
-// ctx.beginPath();
-// ctx.arc(500, 200, 50, 0, 2 * Math.PI);
-// ctx.stroke();
-
-</script>
-
-<form>
-    <input type="text" id="imagename" value="" />
-</form>
-
-    
-</head>
-<body>
-    
-	<script type="text/javascript">
-
-		if(window.DeviceMotionEvent)
-		{
-			window.addEventListener("devicemotion", motion, false);
-		}
-		else
-		{
-			console.log("DeviceMotionEvent is not supported");
-		}
-
-		if(window.DeviceOrientationEvent)
-		{
-			window.addEventListener("deviceorientation", orientation, false);
-		}
-		else
-		{
-			console.log("DeviceOrientationEvent is not supported");
-		}
-
-		function motion(event)
-		{
-			console.log("Accelerometer: "
-				+ event.accelerationIncludingGravity.x + ", "
-				+ event.accelerationIncludingGravity.y + ", "
-				+ event.accelerationIncludingGravity.z
-				);
-
-			alert("Accelerometer: "
-				+ event.accelerationIncludingGravity.x + ", "
-				+ event.accelerationIncludingGravity.y + ", "
-				+ event.accelerationIncludingGravity.z);
-		}
-
-		function orientation(event)
-		{
-			console.log("Magnetometer: "
-				+ event.alpha + ", "
-				+ event.beta + ", "
-				+ event.gamma
-				);
-
-			alert("Magnetometer: "
-				+ event.alpha + ", "
-				+ event.beta + ", "
-				+ event.gamma);
-		}
-
+			
 	</script>
 
-	<script id="GUI" type="text/javascript">
-    
-	</script>
+	<form>
+		<input type="text" id="imagename" value="" />
+	</form>
+
+
+	</head>
+	<body>
+
+		<script id="GUI" type="text/javascript">
+
+			var ctx2;
+			init(100, 100);
+
+			function initCircle()
+			{
+				ctx2 = document.getElementById("myCanvas").getContext("2d");
+				ctx2.beginPath();
+				ctx2.arc(400, 250, 50, 0, 2 * Math.PI);
+				ctx2.closePath();
+				ctx2.stroke();
+			}
+			function init(x, y)
+			{
+				initCircle();
+				ctx2.beginPath();
+				ctx2.arc(x, y, 10, 0, 2 * Math.PI);
+				ctx2.fillStyle = 'green';
+				ctx2.fill();
+				ctx2.strokeStyle = '#003300';
+				ctx2.closePath();
+				ctx2.stroke();
+			}
+
+			function update( x, y)
+			{
+				var c = document.getElementById("myCanvas");
+				ctx2.clearRect(0, 0, c.width, c.height);
+
+				init(x, y);
+			}
+
+		</script>
+
+
+		<script type="text/javascript">
+
+			var xDir = 0.0, yDir = 0.0, zDir = 0.0;
+
+
+			if(window.DeviceMotionEvent)
+			{
+				window.addEventListener("devicemotion", motion, false);
+			}
+			else
+			{
+				console.log("DeviceMotionEvent is not supported");
+			}
+
+			if(window.DeviceOrientationEvent)
+			{
+				window.addEventListener("deviceorientation", orientation, false);
+				update(200, 100);
+			}
+			else
+			{
+				console.log("DeviceOrientationEvent is not supported");
+			}
+
+			function motion(event)
+			{
+				console.log("Accelerometer: "
+					+ event.accelerationIncludingGravity.x + ", "
+					+ event.accelerationIncludingGravity.y + ", "
+					+ event.accelerationIncludingGravity.z
+					);
+				//alert("Accelerometer: "
+					// + event.accelerationIncludingGravity.x + ", "
+					// + event.accelerationIncludingGravity.y + ", "
+					// + event.accelerationIncludingGravity.z);
+			}
+			function orientation(event)
+			{
+				console.log("Magnetometer: "
+					+ event.alpha + ", "
+					+ event.beta + ", "
+					+ event.gamma
+					);
+
+				xDir = Math.cos(event.gamma/180*Math.PI) + Math.sin(event.alpha/180*Math.PI);
+				yDir = Math.cos(event.alpha/180*Math.PI) + Math.sin(event.beta/180*Math.PI);
+				zDir = Math.cos(event.beta/180*Math.PI) + Math.sin(event.gamma/180*Math.PI);
+				//alert("Magnetometer: "
+					// + event.alpha + ", "
+					// + event.beta + ", "
+					// + event.gamma);
+
+				alert("Dir: " + xDir + "," + yDir + "," + zDir);
+			}
+
+			
+
+		</script>
 
     
 
