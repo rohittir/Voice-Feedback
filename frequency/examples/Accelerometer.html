@@ -20,7 +20,7 @@
 		// jshint ignore: start
 	</script>
 	
-	<canvas id="myCanvas" width="800" height="500" style="position: absolute; left:0; top: 0; outline:1px solid #d3d3d3;">
+	<canvas id="myCanvas" width="1000" height="1000" style="position: absolute; left:0; top: 0; outline:1px solid #d3d3d3;">
 		Your browser does not support the HTML5 canvas tag.</canvas>
 
 		<script>
@@ -105,7 +105,7 @@
 			{
 				ctx2 = document.getElementById("myCanvas").getContext("2d");
 				ctx2.beginPath();
-				ctx2.arc(400, 250, 50, 0, 2 * Math.PI);
+				ctx2.arc(400, 400, 50, 0, 2 * Math.PI);
 				ctx2.closePath();
 				ctx2.stroke();
 			}
@@ -180,10 +180,10 @@
 					
 					xCircle = xCircle + units*(xDir);
 					yCircle = yCircle - units*(yDir);
-					if(xCircle > 800)
-						xCircle = 800;
-					if(yCircle > 500)
-						yCircle = 500;
+					if(xCircle > 1000)
+						xCircle = 1000;
+					if(yCircle > 1000)
+						yCircle = 1000;
 					if(xCircle < 10)
 						xCircle = 10;
 					if(yCircle < 10)
@@ -194,7 +194,7 @@
 					//sound
 					var radius = 50;
 					var xDev = xCircle - 400;
-					var yDev = yCircle - 250;
+					var yDev = yCircle - 400;
 
 					var dist = Math.pow(xDev, 2) + Math.pow(yDev, 2);
 					dist = Math.sqrt(dist);
@@ -208,7 +208,7 @@
 					Tone.Master.mute = false;
 					frequency.rampTo(freq, 0);
 
-					if(dist > 450)
+					if(dist > 300)
 					{
 						Tone.Master.mute = true;
 					}
