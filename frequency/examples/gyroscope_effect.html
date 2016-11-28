@@ -107,11 +107,7 @@
 					+ event.accelerationIncludingGravity.y + ", "
 					+ event.accelerationIncludingGravity.z
 					);
-				//alert("Accelerometer: "
-					// + event.accelerationIncludingGravity.x + ", "
-					// + event.accelerationIncludingGravity.y + ", "
-					// + event.accelerationIncludingGravity.z);
-
+				
 					xDir = event.accelerationIncludingGravity.x;
 					yDir = event.accelerationIncludingGravity.y;
 					zDir = event.accelerationIncludingGravity.z;
@@ -120,10 +116,6 @@
 					xDir = xDir/Dim;
 					yDir = yDir/Dim;
 					zDir = zDir/Dim;
-				//alert("Magnetometer: "
-					// + event.alpha + ", "
-					// + event.beta + ", "
-					// + event.gamma);
 					
 					//calculate angle between two vectors
 					var uv = xDir*xDir + yDir*yDir;
@@ -139,7 +131,6 @@
 						xCircle = 800;
 					if(yCircle > 500)
 						yCircle = 500;
-				
 					if(xCircle < 10)
 						xCircle = 10;
 					if(yCircle < 10)
@@ -147,6 +138,7 @@
 
 					update(xCircle, yCircle);
 			}
+			
 			function orientation(event)
 			{
 				console.log("Magnetometer: "
