@@ -90,15 +90,15 @@
 				console.log("DeviceMotionEvent is not supported");
 			}
 
-			if(window.DeviceOrientationEvent)
-			{
-				window.addEventListener("deviceorientation", orientation, false);
+			//if(window.DeviceOrientationEvent)
+			//{
+				//window.addEventListener("deviceorientation", orientation, false);
 				//update(200, 100);
-			}
-			else
-			{
-				console.log("DeviceOrientationEvent is not supported");
-			}
+			//}
+			//else
+			//{
+			// 	console.log("DeviceOrientationEvent is not supported");
+			// }
 
 			function motion(event)
 			{
@@ -111,20 +111,10 @@
 					// + event.accelerationIncludingGravity.x + ", "
 					// + event.accelerationIncludingGravity.y + ", "
 					// + event.accelerationIncludingGravity.z);
-			}
-			function orientation(event)
-			{
-				console.log("Magnetometer: "
-					+ event.alpha + ", "
-					+ event.beta + ", "
-					+ event.gamma
-					);
 
-				if(event.alpha != null || event.beta != null || event.gamma != null)
-				{
-					xDir = Math.cos(event.gamma/180*Math.PI) + Math.sin(event.alpha/180*Math.PI);
-					yDir = Math.cos(event.alpha/180*Math.PI) + Math.sin(event.beta/180*Math.PI);
-					zDir = Math.cos(event.beta/180*Math.PI) + Math.sin(event.gamma/180*Math.PI);
+					xDir = event.accelerationIncludingGravity.x;
+					yDir = event.accelerationIncludingGravity.y;
+					zDir = event.accelerationIncludingGravity.z;
 
 					var Dim = Math.sqrt(xDir*xDir + yDir*yDir + zDir*zDir);
 					xDir = xDir/Dim;
@@ -140,7 +130,47 @@
 					var angle = uv/(Math.sqrt(xDir*xDir + yDir*yDir + zDir*zDir)*Math.sqrt(uv));
 					angle = Math.acos(angle);
 					
-					var units = angle*180/Math.PI;
+					var units = (angle*180)/Math.PI;
+					units = units/10;
+					
+					xCircle = xCircle + units*(xDir);
+					yCircle = yCircle + units*(yDir);
+					if(xCircle > 800)
+						xCircle = 800;
+					if(yCircle > 500)
+						yCircle = 500;
+
+					update(xCircle, yCircle);
+			}
+			function orientation(event)
+			{
+				console.log("Magnetometer: "
+					+ event.alpha + ", "
+					+ event.beta + ", "
+					+ event.gamma
+					);
+
+				if(event.alpha != null || event.beta != null || event.gamma != null)
+				{
+					xDir = Math.sin((event.gamma/180)*Math.PI) + Math.cos((event.alpha/180)*Math.PI);
+					yDir = Math.sin((event.alpha/180)*Math.PI) + Math.cos((event.beta/180)*Math.PI);
+					zDir = Math.sin((event.beta/180)*Math.PI) + Math.cos((event.gamma/180)*Math.PI);
+
+					var Dim = Math.sqrt(xDir*xDir + yDir*yDir + zDir*zDir);
+					xDir = xDir/Dim;
+					yDir = yDir/Dim;
+					zDir = zDir/Dim;
+				//alert("Magnetometer: "
+					// + event.alpha + ", "
+					// + event.beta + ", "
+					// + event.gamma);
+					
+					//calculate angle between two vectors
+					var uv = xDir*xDir + yDir*yDir;
+					var angle = uv/(Math.sqrt(xDir*xDir + yDir*yDir + zDir*zDir)*Math.sqrt(uv));
+					angle = Math.acos(angle);
+					
+					var units = (angle*180)/Math.PI;
 					units = units/10;
 					
 					xCircle = xCircle + units*(xDir);
@@ -154,7 +184,8 @@
 					
 					//alert("units: " + units);
 				}
-		}
+			}
+
 
 			
 
